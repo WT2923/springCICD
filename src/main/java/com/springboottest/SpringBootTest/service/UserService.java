@@ -32,9 +32,8 @@ public class UserService {
 
     public UserData loginUser(String username, String password) {
         UserData userData = userRepository.findByUsername(username);
-        if (userData != null && passwordEncoder.matches(password, userData.getPassword())) {
+        if (userData != null && passwordEncoder.matches(password, userData.getPassword()))
             return userData;
-        }
         return null;
     }
 }
