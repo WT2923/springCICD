@@ -2,7 +2,6 @@ package com.springboottest.SpringBootTest;
 
 import com.springboottest.SpringBootTest.dto.UserAccessRequest;
 import com.springboottest.SpringBootTest.model.UserData;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserDataControllerTest {
@@ -30,12 +30,8 @@ public class UserDataControllerTest {
 
         UserData registeredUserData = registrationResponse.getBody();
         assertEquals("testuser", registeredUserData.getUsername());
-        assertEquals(passwordEncoder.encode("password123"), registeredUserData.getPassword());
-    }
+        assertTrue(passwordEncoder.matches("password123", registeredUserData.getPassword()));
 
-    @Test
-    @Disabled
-    public void testLogin() {
         // Login
         UserAccessRequest loginRequest = new UserAccessRequest("testuser", "password123");
         ResponseEntity<UserData> loginResponse = restTemplate.postForEntity("/login", loginRequest, UserData.class);
@@ -44,6 +40,6 @@ public class UserDataControllerTest {
 
         UserData loggedInUser = loginResponse.getBody();
         assertEquals("testuser", loggedInUser.getUsername());
-        assertEquals(passwordEncoder.encode("password123"), loggedInUser.getPassword());
+        assertTrue(passwordEncoder.matches("password123", loggedInUser.getPassword()));
     }
 }
